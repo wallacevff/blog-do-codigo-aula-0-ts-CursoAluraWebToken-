@@ -1,0 +1,33 @@
+{
+  "devDependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.8.4",
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@types/moment-timezone": "^0.5.30",
+    "@types/morgan": "^1.9.3",
+    "@types/sqlite3": "^3.1.8",
+    "dotenv": "^16.0.3",
+    "moment-timezone": "^0.5.37",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20",
+    "sqlite": "^4.1.2",
+    "sqlite-ts": "^0.1.0",
+    "sqlite3": "^5.1.2"
+  },
+  "name": "blog-do-codigo-aula-0-ts",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
