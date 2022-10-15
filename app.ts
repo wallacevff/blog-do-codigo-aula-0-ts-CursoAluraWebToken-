@@ -9,5 +9,9 @@ app.use(
         extended: true
     })
 );
+app.use(
+    bodyParser.json()
+);
+
 
 export { app };
