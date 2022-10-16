@@ -1,18 +1,19 @@
 const usuariosDao = require('./usuarios-dao');
 import { InvalidArgumentError } from "../erros";
 import * as validacoes from "../validacoes-comuns";
+import bcrypt from "bcrypt";
 
 export class UsuarioModelo {
-    id : number;
-    nome : string;
-    email : string;
-    senha : string;
+  id: number;
+  nome: string;
+  email: string;
+  senhaHash: string;
 
-  constructor(usuario : any) {
+  constructor(usuario: any) {
     this.id = usuario.id;
     this.nome = usuario.nome;
     this.email = usuario.email;
-    this.senha = usuario.senha;
+    this.senhaHash = usuario.senhaHash;
 
     this.valida();
   }
@@ -25,39 +26,48 @@ export class UsuarioModelo {
     return usuariosDao.adiciona(this);
   }
 
+  async adicionaSenha(senha: string) {
+    validacoes.campoStringNaoNulo(senha, 'senha');
+    validacoes.campoTamanhoMinimo(senha, 'senha', 8);
+    validacoes.campoTamanhoMaximo(senha, 'senha', 64);
+    this.senhaHash = await UsuarioModelo.gerarSenhaHash(senha);
+  }
+
   valida() {
     validacoes.campoStringNaoNulo(this.nome, 'nome');
     validacoes.campoStringNaoNulo(this.email, 'email');
-    validacoes.campoStringNaoNulo(this.senha, 'senha');
-    validacoes.campoTamanhoMinimo(this.senha, 'senha', 8);
-    validacoes.campoTamanhoMaximo(this.senha, 'senha', 64);
   }
 
-  
+
   async deleta() {
     return usuariosDao.deleta(this);
   }
-  
-  static async buscaPorId(id : number) {
-    const usuario : UsuarioModelo = await usuariosDao.buscaPorId(id);
+
+  static async buscaPorId(id: number) {
+    const usuario: UsuarioModelo = await usuariosDao.buscaPorId(id);
     if (!usuario) {
       return null;
     }
-    
+
     return new UsuarioModelo(usuario);
   }
-  
-  static async buscaPorEmail(email : string) {
-    const usuario : UsuarioModelo = await usuariosDao.buscaPorEmail(email);
+
+  static async buscaPorEmail(email: string) {
+    const usuario: UsuarioModelo = await usuariosDao.buscaPorEmail(email);
     if (!usuario) {
       return null;
     }
-    
+
     return new UsuarioModelo(usuario);
   }
 
   static lista() {
     return usuariosDao.lista();
+  }
+
+  static gerarSenhaHash(senha: string): Promise<string> {
+    const custoHash: number = 12;
+    return bcrypt.hash(senha, custoHash);
   }
 }
 

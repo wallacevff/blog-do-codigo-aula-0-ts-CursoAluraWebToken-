@@ -4,7 +4,7 @@ import { Roteador } from "./rotas";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import moment from "moment-timezone";
-import {InternalServerError} from "./src/erros";
+
 morgan.token('date', (req: Request, res : Response) => {
     return moment().tz('America/Fortaleza').format("DD/mm/yyyy HH:MM:SS");
 });
