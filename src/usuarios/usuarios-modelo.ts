@@ -52,7 +52,7 @@ export class UsuarioModelo {
     return new UsuarioModelo(usuario);
   }
 
-  static async buscaPorEmail(email: string) {
+  static async buscaPorEmail(email: string | null) {
     const usuario: UsuarioModelo = await usuariosDao.buscaPorEmail(email);
     if (!usuario) {
       return null;

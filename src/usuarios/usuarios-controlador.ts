@@ -27,6 +27,10 @@ export class UsuarioControlador {
         }
     }
 
+    static login(req : Request, res: Response){
+        res.status(204).send();
+    }
+
     static async lista(req: Request, res: Response) {
         const usuarios = await UsuarioModelo.lista();
         res.json(usuarios);

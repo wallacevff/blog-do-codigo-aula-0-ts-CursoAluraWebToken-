@@ -1,7 +1,6 @@
 import bodyParser from "body-parser";
 import express, { Express } from "express";
 
-
 const app: Express = express();
 
 app.use(
@@ -12,6 +11,7 @@ app.use(
 app.use(
     bodyParser.json()
 );
+app.use
 
 
 export { app };
