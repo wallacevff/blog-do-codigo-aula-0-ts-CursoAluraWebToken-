@@ -1,15 +1,25 @@
 import { UsuarioModelo } from "./usuarios-modelo";
 import { InvalidArgumentError, InternalServerError } from "../erros";
-import { Response, Request } from "express";
-
+import { Response, Request, Express } from "express";
+import jasonwebtoken, { JwtPayload } from "jsonwebtoken";
+import path from "path";
+const rootDir : string  = path.resolve('./');
 export class UsuarioControlador {
+    static criaTokenJWT(usuario : UsuarioModelo) {
+        const payload: JwtPayload = {
+            id: usuario.id
+        };
+        const token : string = jasonwebtoken.sign(payload, process.env.SECRET as string);
+        return token;
+    }
+
     static async adiciona(req: Request, res: Response) {
         const { nome, email, senha } = req.body
         try {
             const usuario = new UsuarioModelo({
                 nome,
                 email,
-                
+
             });
             await usuario.adicionaSenha(senha);
             await usuario.adiciona();
@@ -21,13 +31,15 @@ export class UsuarioControlador {
             } else if (erro instanceof InternalServerError) {
                 res.status(500).json({ erro: erro.message });
             } else {
-                if(erro instanceof Error)
+                if (erro instanceof Error)
                     res.status(500).json({ erro: erro.message });
             }
         }
     }
 
-    static login(req : Request, res: Response){
+    static login(req: Request, res: Response) {
+        const token : string = UsuarioControlador.criaTokenJWT((req.user as unknown) as UsuarioModelo);
+        res.set('Authorization', token);
         res.status(204).send();
     }
 
@@ -45,7 +57,7 @@ export class UsuarioControlador {
             await usuario.deleta()
             res.status(200).send();
         } catch (erro) {
-            if(erro instanceof Error)
+            if (erro instanceof Error)
                 res.status(500).json({ erro: erro.message });
         }
     }
