@@ -12,6 +12,6 @@ export function UsuarioRotas(app: Express) {
         .get(UsuarioControlador.lista);
     app.route("/usuario/:id")
         .delete(
-            passport.authenticate('bearer', { session: false }),
+            middlewaresAutenticacao.bearer,
             UsuarioControlador.deleta);
 }

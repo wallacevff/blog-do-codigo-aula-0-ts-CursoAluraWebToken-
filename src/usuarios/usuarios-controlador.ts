@@ -52,7 +52,7 @@ export class UsuarioControlador {
         const usuario = await UsuarioModelo.buscaPorId((req.params.id as unknown) as number);
         try {
             if (!usuario) {
-                throw new Error();
+                throw new Error("Usuário não existe na base de dados");
             };
             await usuario.deleta()
             res.status(200).send();
