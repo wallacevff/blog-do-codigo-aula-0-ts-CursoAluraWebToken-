@@ -1,7 +1,7 @@
 import { UsuarioModelo } from "./usuarios-modelo";
 import { InvalidArgumentError, InternalServerError } from "../erros";
 import { Response, Request, Express } from "express";
-import jasonwebtoken, { JwtPayload } from "jsonwebtoken";
+import jasonwebtoken, { JwtPayload, SignOptions } from "jsonwebtoken";
 import path from "path";
 const rootDir : string  = path.resolve('./');
 export class UsuarioControlador {
@@ -9,7 +9,7 @@ export class UsuarioControlador {
         const payload: JwtPayload = {
             id: usuario.id
         };
-        const token : string = jasonwebtoken.sign(payload, process.env.SECRET as string);
+        const token : string = jasonwebtoken.sign(payload, process.env.SECRET as string, ({expiresIn: "15m"} as unknown) as SignOptions);
         return token;
     }
 

@@ -5,7 +5,7 @@ import { MiddlewaresAutenticacao } from "../usuarios"
 export function PostRotas(app: Express) {
     app
         .route('/post')
-        .get(postsControlador.lista)
+        .get(MiddlewaresAutenticacao.bearer, postsControlador.lista)
         .post(
             MiddlewaresAutenticacao.bearer,
             postsControlador.adiciona);
