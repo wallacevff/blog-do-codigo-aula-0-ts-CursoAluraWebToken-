@@ -38,8 +38,10 @@ export class MiddlewaresAutenticacao {
                 if(!usuario){
                     return res.status(401).json({erro : "Requisição mal formatada"});
                 }
-
+                
                 req.user = usuario;
+                // req = ({...req, token : info.token} as unknown) as Request;
+                (req as any).token = info.token;
                 return next();
             }
         )(req, res, next)

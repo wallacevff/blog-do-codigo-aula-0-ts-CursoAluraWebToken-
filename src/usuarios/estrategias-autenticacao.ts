@@ -2,15 +2,24 @@ import passport from "passport";
 import { Strategy as LocalStrategy, IStrategyOptions } from "passport-local";
 import { UsuarioModelo as Usuario, UsuarioModelo } from "./usuarios-modelo";
 import { InvalidArgumentError } from "../erros";
-import {Strategy as BearerStrategy} from "passport-http-bearer";
+import { Strategy as BearerStrategy } from "passport-http-bearer";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { manipulaBlacklist } from "../../redis/manipula-blacklist";
 
 function verificausuario(usuario: Usuario | null) {
     if (!usuario) {
         throw new InvalidArgumentError("Não existe usuário com esse e-mail.");
     }
     return usuario;
+}
+
+async function verificaTokenNaBlacklist(token: string) : Promise<void> {
+    const tokenNaBlacklist = await manipulaBlacklist.contemToken(token);
+    if (tokenNaBlacklist) {
+        throw new jwt.JsonWebTokenError('Token inválido por logout');
+    }
+    return;
 }
 
 function senhaEmBranco(...params: any[]): null | InvalidArgumentError {
@@ -52,13 +61,14 @@ passport.use(
 );
 
 passport.use(
-    new BearerStrategy( async (token: string, done : CallableFunction) => {
-        try{
+    new BearerStrategy(async (token: string, done: CallableFunction) => {
+        try {
+            await verificaTokenNaBlacklist(token);
             const payload = jwt.verify(token, process.env.SECRET as string);
-            const usuario : Usuario | null = await Usuario.buscaPorId((payload as Usuario).id as number);
-            done(null, usuario);
+            const usuario: Usuario | null = await Usuario.buscaPorId((payload as Usuario).id as number);
+            done(null, usuario, { token: token });
         }
-        catch(erro){
+        catch (erro) {
             done(erro);
         }
     })

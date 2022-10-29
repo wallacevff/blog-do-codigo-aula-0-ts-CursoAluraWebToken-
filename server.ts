@@ -5,6 +5,9 @@ import { Request, Response } from "express";
 import { Roteador } from "./rotas";
 import morgan from "morgan";
 import moment from "moment-timezone";
+require("./redis/blacklist");
+
+
 
 morgan.token('date', (req: Request, res : Response) => {
     return moment().tz('America/Fortaleza').format("DD/mm/yyyy HH:MM:ss");

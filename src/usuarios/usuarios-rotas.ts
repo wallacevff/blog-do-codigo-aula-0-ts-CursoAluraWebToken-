@@ -6,6 +6,10 @@ export function UsuarioRotas(app: Express) {
         .post(middlewaresAutenticacao.local,
             UsuarioControlador.login);
 
+    app.route("/usuario/logout")
+        .post(middlewaresAutenticacao.bearer,
+            UsuarioControlador.logout);
+
     app.route("/usuario")
         .post(UsuarioControlador.adiciona)
         .get(UsuarioControlador.lista);
